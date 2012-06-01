@@ -1,0 +1,16 @@
+digraph "server-state-machine" {
+  LOBBY -> LOBBY [label="users connect, ready"];
+  LOBBY -> PICK_SPIES [label="all users ready"];
+  PICK_SPIES -> PICK_LEADER [label="send SPY, RESISTANCE"];
+  PICK_LEADER -> WAIT_FOR_TEAM [label="send LEADER [username] [teamsize]"];
+  WAIT_FOR_TEAM -> VOTE_ON_TEAM [label="receive TEAM, broadcast TEAM"];
+  VOTE_ON_TEAM -> VOTE_ON_TEAM [label="receive VOTE [YES,NO] [username]"];
+  VOTE_ON_TEAM -> TEAM_VOTE_FAILED [label="votes received, majority NO"];
+  TEAM_VOTE_FAILED -> PICK_LEADER [label="select next leader"];
+  VOTE_ON_TEAM -> ON_MISSION [label="votes received, majority YES"];
+  ON_MISSION -> ON_MISSION [label="receive VOTE [YES,NO] [username]"];
+  ON_MISSION -> ANNOUNCE_RESULTS [label="votes received"];
+  ANNOUNCE_RESULTS -> PICK_LEADER [label="select next leader"];
+  ANNOUNCE_RESULTS -> RESISTANCE_WIN [label="three missions for resistance"];
+  ANNOUNCE_RESULTS -> SPIES_WIN [label="three missions for spy"];
+}
