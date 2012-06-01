@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>    
+    <script src="js/ender.js"></script>
+    <script src="js/uri.min.js"></script>
+    <script src="js/game.js"></script>
+
+    <link rel="stylesheet" href="style.css" type="text/css">
+  </head>
+  <body>
+    #######################<br>
+    &nbsp;&nbsp;&nbsp;Welcome to the Resistance <br>
+    #######################<br>&nbsp;<br>
+    <div id="content">
+      <div id="user-container">
+        Registered agents<br>
+        -------------------------
+        <ul id="users"></ul>
+      </div>
+      <br>
+    </div>
+    <div id="ready-picker">
+      <small>Click to toggle ready state</small>
+      <div class="notready" id="ready"></div>
+    </div>
+    <div id="popover">
+      <div id="popup">
+        Error: you have been disconnected
+        <div id="popup-content"></div>
+        <a href="#" id="reload-page-link">RECONNECT</a>
+        <a href="index.html" id="close-popup-link">LOG OUT</a>
+      </div>
+      <div id="mask"></div>
+    </div>
+    <div style="display:none" id="preload">
+      <img src="img/ready.png">
+      <img src="img/notready.png">
+    </div>
+  </body>
+</html>
