@@ -1,3 +1,4 @@
+@import url(fonts/FontAwesome/css/font-awesome.css);
 @import url(fonts/Silkscreen/stylesheet.css);
 
 body {
@@ -8,6 +9,10 @@ body {
   margin: 0;
   padding: 7%;
   border: 50pt solid #111;
+}
+
+.fade {
+  color: #060;
 }
 
 h2 {
@@ -22,6 +27,7 @@ h3 {
 
 small {
   font-size: 8pt;
+  color: #444;
 }
 
 input {
@@ -67,11 +73,11 @@ input {
   display: none;
 }
 
-#popover {
+.popover {
   display: none;
 }
 
-#popup {
+.popup {
   position: fixed;
   left: 15%;
   top: 20%;
@@ -82,7 +88,7 @@ input {
   z-index: 100;
 }
 
-#mask {
+.mask {
   position: fixed;
   top: 0;
   left: 0;
@@ -91,6 +97,19 @@ input {
   background: #000;
   z-index: 10;
   opacity: 0.8;
+}
+
+.icon {
+  float: right;
+  font-size: 60pt;
+}
+
+.spy-icon {
+  color: #F00;
+}
+
+.resistance-icon {
+  color: #00F;
 }
 
 a {
@@ -117,4 +136,39 @@ a:before {
   right: 100pt;
   bottom: 100pt;
   text-align: right;
+}
+
+.round .winner {
+  width: 9pt;
+  height: 9pt;
+  float: left;
+  margin-top: 3pt;
+  margin-right: 10pt;
+}
+
+.winner.spy {
+  background-color: #F00;
+}
+
+.winner.resistance {
+  background-color: #00F;
+}
+
+#game {
+  display: none;
+}
+
+#lobby {
+  /*
+  display: none;
+  */
+}
+
+#leader-pick i {
+  margin-right: 10pt;
+  font-size: 14pt;
+}
+
+#leader-pick {
+  list-style: none;
 }

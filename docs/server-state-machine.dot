@@ -1,7 +1,8 @@
 digraph "server-state-machine" {
   LOBBY -> LOBBY [label="users connect, ready"];
   LOBBY -> PICK_SPIES [label="all users ready"];
-  PICK_SPIES -> PICK_LEADER [label="send SPY, RESISTANCE"];
+  PICK_SPIES -> PICK_FIRST_LEADER [label="send SPY, RESISTANCE"];
+  PICK_FIRST_LEADER -> PICK_LEADER [label="assign first leader"];
   PICK_LEADER -> WAIT_FOR_TEAM [label="send LEADER [username] [teamsize]"];
   WAIT_FOR_TEAM -> VOTE_ON_TEAM [label="receive TEAM, broadcast TEAM"];
   VOTE_ON_TEAM -> VOTE_ON_TEAM [label="receive VOTE [YES,NO] [username]"];

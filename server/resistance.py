@@ -13,18 +13,21 @@ class EchoConnection(SockJSConnection):
 
     if cmd == 'CONNECT':
       instance, as_kw, username = args.split(' ')
-      user = users.user(username, self)
-      game = games.game(instance).connect(user)
+      self.user = users.user(username, self)
+      game = games.game(instance).connect(self.user)
 
     if cmd == 'READY':
       username = args
-      user = users.user(username, self)
-      user.setready(True)
+      self.user = users.user(username, self)
+      self.user.setready(True)
 
     if cmd == 'NOTREADY':
       username = args
-      user = users.user(username, self)
-      user.setready(False)
+      self.user = users.user(username, self)
+      self.user.setready(False)
+
+  def on_close(self):
+    self.user.game.disconnect(self.user)
 
 def main(args):
   port = args and int(args[0]) or 8001
