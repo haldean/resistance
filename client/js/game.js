@@ -24,7 +24,7 @@
     }
   }
 
-  var sock = new SockJS('http://localhost:8001/echo');
+  var sock = new SockJS('http://haldean.org:8001/echo');
   sock.onopen = function() {
     write('Please use the connect command to connect to an instance' +
       '\nExample: connect [username] [instance name]' +
