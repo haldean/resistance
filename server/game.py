@@ -19,6 +19,7 @@ class game(statemachine):
       'on_mission',
       'resistance_win',
       'spies_win',
+      'game_over',
       ]
 
   def __init__(self, name):
@@ -174,24 +175,24 @@ class game(statemachine):
 
       if yes_votes > no_votes:
         self.broadcast('!Mission is successful')
-        self.missions[self.mission]((True, self.proposed_team))
+        self.missions[self.mission] = (True, self.proposed_team)
       else:
         self.broadcast('!Mission has failed')
-        self.missions[self.mission]((False, self.proposed_team))
+        self.missions[self.mission] = (False, self.proposed_team)
       self.mission += 1
       self.check_if_won()
       self.transition('pick_leader')
 
   def check_if_won(self):
     passes, fails = 0, 0
-    for mission_passed, team in self.missions:
+    for mission_passed, team in self.missions[:self.mission]:
       if mission_passed:
         passes += 1
       else:
         fails += 1
     if passes == 3:
       self.transition('resistance_win')
-    else:
+    elif fails == 3:
       self.transition('spies_win')
 
   @on_enter('on_mission')
@@ -206,11 +207,18 @@ class game(statemachine):
   def resistance_win(self):
     self.broadcast('!The rebels have won.\nSpies: %s' %
         ', '.join(user.name for user in self.users if user.spy))
+    self.transition('game_over')
 
   @on_enter('spies_win')
   def spies_win(self):
     self.broadcast('!The spies have won.\nSpies: %s' %
         ', '.join(user.name for user in self.users if user.spy))
+    self.transition('game_over')
+
+  @on_enter('game_over')
+  def game_over(self):
+    for user in self.users:
+      user.connection.disconnect()
 
   def vote(self, user, passes):
     if not (self.in_state('vote_on_team') or self.in_state('on_mission')):
@@ -251,7 +259,7 @@ class game(statemachine):
     else:
       user.connection.send('You are a rebel')
 
-  def send_rounds(self, user):
+  def send_missions(self, user):
     def format_round_info(round_info):
       i, round_info = round_info
       if round_info != None:
@@ -262,14 +270,15 @@ class game(statemachine):
           return 'Failed    %s' % ' '.join(user.name for user in members)
       else:
         return 'Not played (%d users)' % rules.mission_size(len(self.users), i)
-    '\n'.join(format_round_info, enumerate(self.rounds))
+    user.connection.send(
+        '\n'.join(map(format_round_info, enumerate(self.missions))))
 
   def send_help(self, user):
     user.connection.send('''Available commands:
     help:         Displays this information
     connected:    Displays connected users
     affiliation:  Displays your affiliation
-    rounds:       Displays round information
+    missions:     Displays round information
     leader:       Displays the team leader's username
     choose:       Chooses a list of users when you are team leader
     ready:        Announces ready status

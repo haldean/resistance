@@ -49,8 +49,8 @@ class EchoConnection(SockJSConnection):
     elif cmd == 'affiliation':
       self.game.send_affiliation(self.user)
 
-    elif cmd == 'rounds':
-      self.game.send_rounds(self.user)
+    elif cmd == 'missions':
+      self.game.send_missions(self.user)
 
     else:
       self.user.connection.send('Unknown command "%s"' % cmd)
