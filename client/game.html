@@ -1,6 +1,7 @@
 <html>
   <head>
     <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>    
+    <script src="js/termlib/termlib.js"></script>
     <script src="js/ender.js"></script>
     <script src="js/uri.min.js"></script>
     <script src="js/game.js"></script>
@@ -8,90 +9,6 @@
     <link rel="stylesheet" href="style.css" type="text/css">
   </head>
   <body>
-    <header class="fade">
-      ####################################<br>
-      &nbsp;&nbsp;&nbsp;Welcome to the Resistance, 
-      <span class="username"></span><br>
-      ####################################<br>&nbsp;<br>
-    </header>
-    <div id="lobby">
-      <div id="user-container">
-        Registered agents<br>
-        -------------------------
-        <ul id="users"></ul>
-      </div>
-      <br>
-    </div>
-
-    <div id="game">
-      <div id="leader">
-        <i class="icon-sitemap icon"></i>
-        YOU ARE TEAM LEADER<br>
-        ----------------------<br>
-        You must pick of team of <span id="leader-count">3</span> people.
-        <ul id="leader-pick">
-          <li><i class="icon-ok"></i>haldean</li>
-          <li><i class="icon-ok"></i>sean</li>
-          <li><i class="icon-remove"></i>lila</li>
-          <li><i class="icon-remove"></i>hans is a spy</li>
-          <li><i class="icon-ok"></i>nathan</li>
-          <li><a href="#" id="propose-team">Propose team</a></li>
-        </ul>
-      </div>
-      <div id="rounds" class="fade">
-        PREVIOUS MISSION REPORTS<br>
-        ---------
-        <div id="round0" class="round">
-          <div class="winner spy"></div>
-          <div class="players">Haldean, hans is a spy</div>
-        </div>
-        <div id="round1" class="round">
-          <div class="winner resistance"></div>
-          <div class="players">sean, lila, haldean</div>
-        </div>
-        <div id="round2" class="round">
-          <div class="winner resistance"></div>
-          <div class="players">sean, lila, haldean, nathan</div>
-        </div>
-        <div id="round3" class="round">
-          <div class="winner"></div>
-          <div class="players">(3)</div>
-        </div>
-        <div id="round4" class="round">
-          <div class="winner"></div>
-          <div class="players">(4)</div>
-        </div>
-      </div>
-    </div>
-
-    <div id="ready-picker">
-      <small>Click to toggle ready state</small>
-      <div class="notready" id="ready"></div>
-    </div>
-
-    <div id="msg-popover" class="popover">
-      <div class="popup">
-        <i class="spy-icon icon-eye-close icon"></i>
-        <i class="resistance-icon icon-bolt icon"></i>
-        <div id="msg-popup-content">SPY</div>
-        <a href="#" id="msg-popup-dismiss">DISMISS</a>
-      </div>
-      <div class="mask"></div>
-    </div>
-
-    <div id="error-popover" class="popover">
-      <div class="popup">
-        Error: you have been disconnected
-        <div id="error-popup-content"></div>
-        <a href="#" id="reload-page-link">RECONNECT</a>
-        <a href="index.html" id="close-popup-link">LOG OUT</a>
-      </div>
-      <div class="mask"></div>
-    </div>
-
-    <div style="display:none" id="preload">
-      <img src="img/ready.png">
-      <img src="img/notready.png">
-    </div>
+    <div id="termDiv"</div>
   </body>
 </html>

@@ -1,14 +1,15 @@
 @import url(fonts/FontAwesome/css/font-awesome.css);
-@import url(fonts/Silkscreen/stylesheet.css);
+@import url(fonts/ProFont/stylesheet.css);
 
 body {
-  font-family: 'SilkscreenNormal';
-  color: #0F0;
+  font-family: 'ProFontWindowsRegular';
+  color: #080;
   background-color: #000;
   font-size: 16pt;
   margin: 0;
   padding: 7%;
   border: 50pt solid #111;
+  text-transform: uppercase;
 }
 
 .fade {

@@ -4,6 +4,8 @@ class user(object):
     self.name = username
     self.connection = connection
     self.ready = False
+    self.vote = None
+    self.spy = None
 
   def setready(self, isready):
     if isready:

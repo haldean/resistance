@@ -2,18 +2,7 @@ import random
 
 def spies_for_team(usernames):
   n = len(usernames)
-  if n == 5:
-    spies = 2
-  elif n == 6:
-    spies = 2
-  elif n == 7:
-    spies = 3
-  elif n == 8:
-    spies = 3
-  elif n == 9:
-    spies = 3
-  elif n == 10:
-    spies = 4
+  spies = [2, 2, 3, 3, 3, 4][n - 5]
   return set(random.sample(usernames, spies))
 
 def mission_size(users, mission):

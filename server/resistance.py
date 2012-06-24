@@ -9,25 +9,54 @@ users = userdict.userdict()
 class EchoConnection(SockJSConnection):
   def on_message(self, msg):
     print 'receive', msg
-    cmd, args = msg.split(' ', 1)
+    if ' ' in msg:
+      cmd, args = msg.split(' ', 1)
+    else:
+      cmd = msg
+    cmd = cmd.lower()
 
-    if cmd == 'CONNECT':
+    if cmd == 'connect':
       instance, as_kw, username = args.split(' ')
       self.user = users.user(username, self)
-      game = games.game(instance).connect(self.user)
+      self.game = games.game(instance)
+      self.user.game = self.game
+      self.game.connect(self.user)
 
-    if cmd == 'READY':
-      username = args
-      self.user = users.user(username, self)
+    elif cmd == 'ready':
       self.user.setready(True)
 
-    if cmd == 'NOTREADY':
-      username = args
-      self.user = users.user(username, self)
+    elif cmd == 'notready':
       self.user.setready(False)
 
+    elif cmd == 'help':
+      self.game.send_help(self.user)
+
+    elif cmd == 'connected':
+      self.game.send_connected(self.user)
+
+    elif cmd == 'leader':
+      self.game.send_leader(self.user)
+
+    elif cmd == 'choose':
+      self.game.choose_team(self.user, args.split(' '))
+
+    elif cmd == 'pass':
+      self.game.vote(self.user, True)
+
+    elif cmd == 'fail':
+      self.game.vote(self.user, False)
+
+    elif cmd == 'affiliation':
+      self.game.send_affiliation(self.user)
+
+    elif cmd == 'rounds':
+      self.game.send_rounds(self.user)
+
+    else:
+      self.user.connection.send('Unknown command "%s"' % cmd)
+
   def on_close(self):
-    self.user.game.disconnect(self.user)
+    self.game.disconnect(self.user)
 
 def main(args):
   port = args and int(args[0]) or 8001
