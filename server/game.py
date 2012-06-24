@@ -44,7 +44,7 @@ class game(statemachine):
     if user not in self.users:
       self.users.append(user)
     user.ready = False
-    user.connection.send('Connected. Welcome to the instance.\n\n' +
+    user.send('Connected. Welcome to the instance.\n\n' +
         'Type commands using the keyboard, and hit enter to send ' +
         'to the central server\n' +
         'Type "help" to see a list of commands\n\n' +
@@ -70,7 +70,7 @@ class game(statemachine):
   @on_enter('wait_for_team')
   def ask_for_team(self):
     leader_user = self.users[self.leader]
-    leader_user.connection.send(('Use the "choose" command to send %d ' +
+    leader_user.send(('Use the "choose" command to send %d ' +
         'usernames (space-separated) for mission\n') %
         rules.mission_size(len(self.users), self.mission))
 
@@ -84,13 +84,13 @@ class game(statemachine):
 
   def ready(self, user):
     user.ready = True
-    user.connection.send('Ready status confirmed.')
+    user.send('Ready status confirmed.')
     self.send_connected(user)
     self.on_ready_change()
 
   def notready(self, user):
     user.ready = False
-    user.connection.send('Ready status withdrawn.')
+    user.send('Ready status withdrawn.')
     self.send_connected(user)
     self.on_ready_change()
 
@@ -102,11 +102,11 @@ class game(statemachine):
       user.ready = False
       if user.name in spies:
         user.spy = True
-        user.connection.send('You are a spy! Please identify the other spies.\n'
+        user.send('You are a spy! Please identify the other spies.\n'
             + 'Send "READY" when you\'re done.')
       else:
         user.spy = False
-        user.connection.send('You are a rebel! Please allow the '
+        user.send('You are a rebel! Please allow the '
             + 'spies to identify each other.\nSend "READY" when they\'re done.')
     self.transition('identify_spies')
 
@@ -114,18 +114,18 @@ class game(statemachine):
     proposed_team = set(proposed_team)
 
     if proposing_user != self.users[self.leader]:
-      proposing_user.connection.send('You are not team leader.')
+      proposing_user.send('You are not team leader.')
       return
 
     required_users = rules.mission_size(len(self.users), self.mission)
     if len(proposed_team) != required_users:
-      proposing_user.connection.send(('You must pick a team of %d users ' +
+      proposing_user.send(('You must pick a team of %d users ' +
         '(received a team of %d)') % (required_users, len(proposed_team)))
       return
 
     possible_usernames = set([user.name for user in self.users])
     if not proposed_team <= possible_usernames:
-      proposing_user.connection.send('Invalid usernames: %s' %
+      proposing_user.send('Invalid usernames: %s' %
           ', '.join(proposed_team - possible_usernames))
       return
 
@@ -200,8 +200,7 @@ class game(statemachine):
     self.broadcast('!The mission has begun')
     for user in self.proposed_team:
       user.vote = None
-      user.connection.send('You are on the mission.\n' +
-          'Use the pass or fail commands.')
+      user.send('You are on the mission.\nUse the pass or fail commands.')
 
   @on_enter('resistance_win')
   def resistance_win(self):
@@ -222,13 +221,13 @@ class game(statemachine):
 
   def vote(self, user, passes):
     if not (self.in_state('vote_on_team') or self.in_state('on_mission')):
-      user.connection.send('Cannot vote at this time')
+      user.send('Cannot vote at this time')
       return
     user.vote = passes
     if passes:
-      user.connection.send('Pass vote received')
+      user.send('Pass vote received')
     else:
-      user.connection.send('Fail vote received')
+      user.send('Fail vote received')
     if self.in_state('vote_on_team'):
       self.check_team_votes()
     else:
@@ -244,20 +243,20 @@ class game(statemachine):
         return '%s (*)' % user.name
       else:
         return user.name
-    user.connection.send('Connected users: %s' %
+    user.send('Connected users: %s' %
         ', '.join(map(print_user, self.users)))
 
   def send_leader(self, user):
     if self.leader != None:
-      user.connection.send('%s is team leader.' % self.users[self.leader].name)
+      user.send('%s is team leader.' % self.users[self.leader].name)
     else:
-      user.connection.send('There is currently no team leader')
+      user.send('There is currently no team leader')
 
   def send_affiliation(self, user):
     if user.spy:
-      user.connection.send('You are a spy')
+      user.send('You are a spy')
     else:
-      user.connection.send('You are a rebel')
+      user.send('You are a rebel')
 
   def send_missions(self, user):
     def format_round_info(round_info):
@@ -265,16 +264,15 @@ class game(statemachine):
       if round_info != None:
         success, members = round_info
         if success:
-          return 'Passed    %s' % ' '.join(user.name for user in members)
+          return 'Passed     %s' % ' '.join(user.name for user in members)
         else:
-          return 'Failed    %s' % ' '.join(user.name for user in members)
+          return 'Failed     %s' % ' '.join(user.name for user in members)
       else:
         return 'Not played (%d users)' % rules.mission_size(len(self.users), i)
-    user.connection.send(
-        '\n'.join(map(format_round_info, enumerate(self.missions))))
+    user.send('\n'.join(map(format_round_info, enumerate(self.missions))))
 
   def send_help(self, user):
-    user.connection.send('''Available commands:
+    user.send('''Available commands:
     help:         Displays this information
     connected:    Displays connected users
     affiliation:  Displays your affiliation

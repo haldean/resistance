@@ -22,38 +22,8 @@ class EchoConnection(SockJSConnection):
       self.user.game = self.game
       self.game.connect(self.user)
 
-    elif cmd == 'ready':
-      self.user.setready(True)
-
-    elif cmd == 'notready':
-      self.user.setready(False)
-
-    elif cmd == 'help':
-      self.game.send_help(self.user)
-
-    elif cmd == 'connected':
-      self.game.send_connected(self.user)
-
-    elif cmd == 'leader':
-      self.game.send_leader(self.user)
-
-    elif cmd == 'choose':
-      self.game.choose_team(self.user, args.split(' '))
-
-    elif cmd == 'pass':
-      self.game.vote(self.user, True)
-
-    elif cmd == 'fail':
-      self.game.vote(self.user, False)
-
-    elif cmd == 'affiliation':
-      self.game.send_affiliation(self.user)
-
-    elif cmd == 'missions':
-      self.game.send_missions(self.user)
-
     else:
-      self.user.connection.send('Unknown command "%s"' % cmd)
+      self.user.command(msg)
 
   def on_close(self):
     self.game.disconnect(self.user)
