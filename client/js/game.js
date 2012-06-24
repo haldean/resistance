@@ -4,18 +4,7 @@
   var _ = require('underscore');
 
   var connected = false;
-
-  var uri = URI.parseQuery(window.location.search);
-  var instance = uri.server;
-  var username = uri.username;
-
   var term;
-
-  if (! username.match(/^[a-zA-Z_.\-0-9]+$/)) {
-    window.location = 'index.html#badusername';
-  } else if (! instance.match(/^[a-zA-Z_.\-0-9]+$/)) {
-    window.location = 'index.html#badserver';
-  }
 
   function send(msg) {
     sock.send(msg);
@@ -37,7 +26,9 @@
 
   var sock = new SockJS('http://localhost:8001/echo');
   sock.onopen = function() {
-    send('CONNECT ' + instance + ' AS ' + username);
+    write('Please use the connect command to connect to an instance' +
+      '\nExample: connect [username] [instance name]' +
+      '\nIf the instance name does not exist, it will be created\n');
   }
 
   sock.onclose = function() {

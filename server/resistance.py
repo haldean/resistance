@@ -16,7 +16,7 @@ class EchoConnection(SockJSConnection):
     cmd = cmd.lower()
 
     if cmd == 'connect':
-      instance, as_kw, username = args.split(' ')
+      username, instance = args.split(' ')
       self.user = users.user(username, self)
       self.game = games.game(instance)
       self.user.game = self.game
