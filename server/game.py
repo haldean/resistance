@@ -103,7 +103,8 @@ class game(statemachine):
       if user.name in spies:
         user.spy = True
         user.send('You are a spy! Please identify the other spies.\n'
-            + 'Send "READY" when you\'re done.')
+            + 'Other spies: ' + ', '.join([user.name for user in self.users if user.spy])
+            + '\nSend "READY" when you\'re done.')
       else:
         user.spy = False
         user.send('You are a rebel! Please allow the '
@@ -173,7 +174,7 @@ class game(statemachine):
       yes_votes, no_votes = vote_count
       self.broadcast('Final vote: %d pass, %d fail' % (yes_votes, no_votes))
 
-      if yes_votes > no_votes:
+      if no_votes == 0:
         self.broadcast('!Mission is successful')
         self.missions[self.mission] = (True, self.proposed_team)
       else:
