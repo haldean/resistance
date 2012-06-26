@@ -110,7 +110,7 @@ class game(statemachine):
             + 'spies to identify each other.\nSend "READY" when they\'re done.')
     for user in self.users:
       if user.spy:
-        user.send('Other spies: ' + ', '.join([user.name for user in self.users if user.spy])
+        user.send('Other spies: ' + ', '.join([user.name for user in self.users if user.spy]))
     self.transition('identify_spies')
 
   def choose_team(self, proposing_user, proposed_team):
