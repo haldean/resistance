@@ -25,7 +25,7 @@ func printMessages(name string, in chan string) {
 
 func NewTestPlayer(name string) *Player {
 	p := new(Player)
-	p.socket = make(chan string)
+	p.socket = make(chan string, 8)
 	go printMessages(name, p.socket)
 	return p
 }
