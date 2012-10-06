@@ -17,6 +17,8 @@ func NewGame() *Game {
 	return &g
 }
 
+// Player management
+
 func (game *Game) AddPlayer(p *Player) {
 	game.players = append(game.players, p)
 }
@@ -31,6 +33,18 @@ func (game *Game) Broadcast(msg string) {
 	}
 }
 
+// Communication
+
+func (game *Game) SendSpyStatus() {
+  for _, p := range game.players {
+    if p.IsSpy {
+      go p.Send("SPY")
+    } else {
+      go p.Send("RESISTANCE")
+    }
+  }
+}
+
 func (game *Game) AllReady() bool {
 	for _, p := range game.players {
 		if !p.IsReady {
@@ -39,6 +53,8 @@ func (game *Game) AllReady() bool {
 	}
 	return true
 }
+
+// Event loop
 
 func (game *Game) HandleCommand(c *Command) {
 	switch c.Msg {
