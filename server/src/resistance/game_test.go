@@ -26,14 +26,14 @@ func TestHandleCommand(t *testing.T) {
 	p := NewTestPlayer("test")
 	g.AddPlayer(p)
 
-	g.HandleCommand(&Command{Msg: "toggleready", Sender: p})
+	g.HandleCommand(&Command{Msg: "toggle_ready", Sender: p})
 	if !p.IsReady {
-		t.Error("Sending toggleready command should set player to ready")
+		t.Error("Sending toggle_ready command should set player to ready")
 	}
 
-	g.HandleCommand(&Command{Msg: "toggleready", Sender: p})
+	g.HandleCommand(&Command{Msg: "toggle_ready", Sender: p})
 	if p.IsReady {
-		t.Error("Sending toggleready command twice should set player to not ready")
+		t.Error("Sending toggle_ready command twice should set player to not ready")
 	}
 }
 
@@ -81,34 +81,90 @@ func TestSendSpyStatus(t *testing.T) {
 	spies := 0
 	for _, p := range g.players {
 		switch {
-		case p.LastMessage == "SPY":
+		case p.LastMessage == "spy":
 			spies++
-		case p.LastMessage != "RESISTANCE":
+		case p.LastMessage != "resistance":
 			t.Errorf("Player should be sent SPY or RESISTANCE, but was sent %s",
 				p.LastMessage)
 		}
 	}
 }
 
-func TestAllReady(t *testing.T) {
+func TestLobby(t *testing.T) {
 	g := NewGame()
+  go g.Loop()
+  defer g.Stop()
+
+  if g.Started {
+    t.Error("Game should start in lobby mode.")
+  }
+
 	for i := 0; i < 7; i++ {
 		g.AddPlayer(NewTestPlayer("test"))
 	}
 
 	if g.AllReady() {
-		t.Error("Players should start not ready")
+		t.Error("Players should start not ready.")
 	}
 
 	for i := 0; i < 6; i++ {
-		g.players[i].IsReady = true
-		if g.AllReady() {
-			t.Error("AllReady should return false if not all players are ready")
+    g.Queue <- &Command{ Msg: "toggle_ready", Sender: g.players[i]}
+    time.Sleep(50)
+    if !g.players[i].IsReady {
+      t.Error("Sending ready message should set player to ready.")
+    } else if g.AllReady() {
+			t.Error("AllReady should return false if not all players are ready.")
 		}
 	}
 
-	g.players[6].IsReady = true
+  if g.Started {
+    t.Error("Game should not start unless all players are ready.")
+  }
+
+  g.Queue <- &Command{ Msg: "toggle_ready", Sender: g.players[6]}
+  time.Sleep(50)
 	if !g.AllReady() {
-		t.Error("AllReady should return true if all players are ready")
+		t.Error("AllReady should return true if all players are ready.")
 	}
+
+  if !g.Started {
+    t.Error("Game should start when all players are ready.")
+  }
+}
+
+func TestBadPlayerCount(t *testing.T) {
+  g := NewGame()
+  go g.Loop()
+  defer g.Stop()
+
+  for i := 0; i < 4; i++ {
+    p := NewTestPlayer("test")
+    g.AddPlayer(p)
+    g.Queue <- &Command{ Msg: "toggle_ready", Sender: p}
+  }
+
+  if g.Started {
+    t.Error("Game should not start with too few players.")
+  }
+
+  for i := 0; i < 4; i++ {
+    g.Queue <- &Command{ Msg: "toggle_ready", Sender: g.players[i] }
+  }
+
+  for i := 0; i < 20; i++ {
+    g.AddPlayer(NewTestPlayer("test"))
+  }
+
+  for i := 0; i < len(g.players); i++ {
+    g.Queue <- &Command{ Msg: "toggle_ready", Sender: g.players[i] }
+    time.Sleep(50)
+
+    if g.Started {
+      t.Error("Game should not start with too many players.")
+    }
+  }
+
+  if !g.AllReady() {
+    t.Error("Your test is bad and you should feel bad.")
+  }
 }
