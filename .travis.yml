@@ -1,6 +1,6 @@
 language: go
 script: ./test.sh
-install:
+install: ./installdeps.sh
 
 notifications:
   email:
