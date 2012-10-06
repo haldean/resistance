@@ -1,0 +1,6 @@
+language: go
+script: ./test.sh
+
+notifications:
+  email:
+    - will.h.brown@gmail.com
