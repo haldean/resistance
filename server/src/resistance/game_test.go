@@ -73,10 +73,10 @@ func TestSendSpyStatus(t *testing.T) {
 		g.AddPlayer(NewTestPlayer("test"))
 	}
 	g.ChooseSpies()
-  g.SendSpyStatus()
+	g.SendSpyStatus()
 
-  // Wait for messages to be sent
-  time.Sleep(100)
+	// Wait for messages to be sent
+	time.Sleep(100)
 
 	spies := 0
 	for _, p := range g.players {

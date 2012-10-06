@@ -3,15 +3,15 @@ package resistance
 import "fmt"
 
 type Player struct {
-	socket  chan string
-	IsSpy   bool
-	IsReady bool
-  LastMessage string
+	socket      chan string
+	IsSpy       bool
+	IsReady     bool
+	LastMessage string
 }
 
 func (p *Player) Send(msg string) {
 	p.socket <- msg
-  p.LastMessage = msg
+	p.LastMessage = msg
 }
 
 func (p *Player) ToggleReady() {

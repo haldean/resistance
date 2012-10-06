@@ -36,13 +36,13 @@ func (game *Game) Broadcast(msg string) {
 // Communication
 
 func (game *Game) SendSpyStatus() {
-  for _, p := range game.players {
-    if p.IsSpy {
-      go p.Send("SPY")
-    } else {
-      go p.Send("RESISTANCE")
-    }
-  }
+	for _, p := range game.players {
+		if p.IsSpy {
+			go p.Send("SPY")
+		} else {
+			go p.Send("RESISTANCE")
+		}
+	}
 }
 
 func (game *Game) AllReady() bool {
