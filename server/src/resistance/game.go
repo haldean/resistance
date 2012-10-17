@@ -1,7 +1,6 @@
 package resistance
 
-import (
-)
+import ()
 
 type Command struct {
 	Msg    string
@@ -61,14 +60,14 @@ func (game *Game) SendSpyStatus() {
 // Game states
 
 func (game *Game) LobbyDone() bool {
-  n := game.PlayerCount()
+	n := game.PlayerCount()
 	return game.AllReady() && n >= MinPlayers && n <= MaxPlayers
 }
 
 // Event loop
 
 func (game *Game) Stop() {
-  game.Quit <- true
+	game.Quit <- true
 }
 
 func (game *Game) HandleCommand(c *Command) {
@@ -79,8 +78,10 @@ func (game *Game) HandleCommand(c *Command) {
 			game.Queue <- &Command{"start_game", nil}
 		}
 
-  case "start_game":
-    game.Started = true
+	case "start_game":
+		game.Started = true
+		game.ChooseSpies()
+		game.SendSpyStatus()
 	}
 }
 

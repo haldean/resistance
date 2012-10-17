@@ -1,12 +1,12 @@
 package resistance
 
 import (
-  "flag"
-  "fmt"
+	"flag"
+	"fmt"
 )
 
 var printMsg = flag.Bool(
-  "printmsg", false, "Print outgoing player messages.")
+	"printmsg", false, "Print outgoing player messages.")
 
 type Player struct {
 	socket      chan string
@@ -27,9 +27,9 @@ func (p *Player) ToggleReady() {
 func printMessages(name string, in chan string) {
 	for {
 		str := <-in
-    if *printMsg {
-      fmt.Printf("Send to %s: %s\n", name, str)
-    }
+		if *printMsg {
+			fmt.Printf("Send to %s: %s\n", name, str)
+		}
 	}
 }
 
